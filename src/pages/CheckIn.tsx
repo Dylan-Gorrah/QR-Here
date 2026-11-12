@@ -40,7 +40,7 @@ export default function CheckIn() {
           <h1 className="display">Almost there</h1>
           <p className="mt-2.5 text-sm leading-[1.65] text-ink-soft">Enter your name to sign in.</p>
         </div>
-        <div className="card px-4 py-[18px] border-l-[3px] border-l-gold"><NameForm cta="Sign in" onDone={run} /></div>
+        <div className="card px-4 py-[18px]"><NameForm cta="Sign in" onDone={run} /></div>
       </PersonShell>
     )
   }

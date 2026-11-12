@@ -57,7 +57,7 @@ export default function Done() {
         </motion.div>
 
         {good && res.title && (
-          <div className="card px-4 py-3.5 flex items-center justify-between border-l-[3px] border-l-gold">
+          <div className="card px-4 py-3.5 flex items-center justify-between">
             <span className="eyebrow">Session</span>
             <span className="text-[14.5px] font-semibold">{res.title}</span>
           </div>

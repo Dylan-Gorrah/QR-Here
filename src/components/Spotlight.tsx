@@ -87,10 +87,10 @@ export default function Spotlight({ c }: { c: Checkin }) {
       <motion.div layoutId={c.id} transition={spring(220, 28)} className="relative" style={{ perspective: 1200 }}>
         <motion.div initial="hidden" animate="show" variants={{ hidden: anim.from, show: { ...anim.to, transition: anim.t } } as Variants}
           style={{ transformOrigin: s.entrance === 'swing' ? 'top center' : 'center' }}
-          className="drop-shadow-[0_18px_30px_rgba(10,35,66,.18)]">
-          <div className="paper-label bg-white border border-line border-l-[5px] px-14 pt-8 pb-11 text-center" style={{ borderLeftColor: s.color }}>
+          className="[filter:drop-shadow(0_28px_40px_rgba(10,35,66,.28))_drop-shadow(0_4px_8px_rgba(10,35,66,.14))]">
+          <div className="paper-label bg-white border border-line px-11 pt-7 pb-10 text-center">
             <div className="eyebrow text-[13px] mb-3">Hello, my name is</div>
-            <div className="font-serif text-[6rem] leading-none font-semibold tracking-[-.01em] whitespace-nowrap text-navy">
+            <div className="font-serif text-[4.6rem] leading-none font-semibold tracking-[-.01em] whitespace-nowrap text-navy">
               {letters ? (
                 <>
                   <Letters text={c.first_name + ' '} mode={s.entrance as 'typing' | 'wave'} delay={0.25} />

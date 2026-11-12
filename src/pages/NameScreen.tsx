@@ -11,7 +11,7 @@ export default function NameScreen() {
         <h1 className="display">Sign in</h1>
         <p className="mt-2.5 text-sm leading-[1.65] text-ink-soft">Enter your name once, then scan the code on the board.</p>
       </div>
-      <div className="card px-4 py-[18px] border-l-[3px] border-l-gold">
+      <div className="card px-4 py-[18px]">
         <NameForm onDone={() => nav('/scan')} />
       </div>
     </PersonShell>

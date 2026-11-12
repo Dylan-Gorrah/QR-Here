@@ -175,7 +175,7 @@ export default function Board() {
   if (!session) return <div className="h-full grid place-items-center"><Spinner /></div>
 
   const count = wall.length + (spot ? 1 : 0)
-  const size = wall.length < 18 ? 'lg' : wall.length < 45 ? 'md' : 'sm'
+  const size = wall.length < 12 ? "lg" : wall.length < 30 ? "md" : "sm"
   const selectedChip = wall.find(w => w.id === selected)
 
   return (
@@ -207,9 +207,9 @@ export default function Board() {
       </motion.div>
 
       <LayoutGroup>
-      <div className="h-full grid grid-cols-3 gap-8 p-10">
+      <div className="h-full grid grid-cols-12 grid-rows-[minmax(0,1fr)] gap-7 p-9 pt-10">
         {/* left: QR */}
-        <section className="col-span-1 relative flex flex-col justify-center">
+        <section className="col-span-3 relative flex flex-col justify-center">
           <div className="card p-8 flex flex-col items-center">
             <div className="eyebrow text-center text-[12px]">{session.title}</div>
             <div className="w-full aspect-square mt-5">
@@ -221,18 +221,11 @@ export default function Board() {
             <div className="mt-6 font-mono text-[4rem] leading-none font-semibold tracking-[.22em] tabular-nums pl-[.22em] text-navy">{session.code}</div>
             <div className="mt-3 font-serif text-[28px] font-semibold text-gold-dark">Scan to sign in</div>
           </div>
-          <div className="mt-6 flex items-center justify-center gap-3">
-            <span className="text-ink-faint text-lg">Signed in</span>
-            <motion.span key={count} initial={{ scale: 1.3, opacity: 0.4 }} animate={{ scale: 1, opacity: 1 }}
-              className="min-w-[3.5rem] h-12 px-4 grid place-items-center rounded bg-navy text-gold font-serif text-[30px] font-bold tabular-nums">
-              {count}
-            </motion.span>
-          </div>
         </section>
 
         {/* right: wall */}
-        <section className="col-span-2 relative card">
-            <div className="h-full p-10">
+        <section className="col-span-6 relative card">
+            <div className="h-full p-8 overflow-y-auto [scrollbar-width:none]">
               {wall.length === 0 && !spot ? (
                 <div className="h-full grid place-items-center text-center">
                   <div>
@@ -251,7 +244,7 @@ export default function Board() {
                           <motion.button
                             initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                             onClick={() => hide(c)}
-                            className="absolute z-30 left-1/2 -translate-x-1/2 top-full mt-2 whitespace-nowrap rounded bg-navy text-white text-sm font-semibold px-4 py-2 border-l-[3px] border-l-gold shadow-lift"
+                            className="absolute z-30 left-1/2 -translate-x-1/2 top-full mt-2 whitespace-nowrap rounded bg-navy text-white text-sm font-semibold px-4 py-2 shadow-lift"
                           >
                             Hide from board
                           </motion.button>
@@ -263,6 +256,43 @@ export default function Board() {
               )}
             </div>
             <AnimatePresence>{spot && <Spotlight key={spot.id} c={spot} />}</AnimatePresence>
+        </section>
+
+        {/* right: attendance register */}
+        <section className="col-span-3 card flex flex-col min-h-0">
+          <div className="px-6 pt-6 pb-5 border-b border-line">
+            <div className="eyebrow text-[11px]">Attendance</div>
+            <div className="mt-2 flex items-end justify-between">
+              <motion.span key={count} initial={{ scale: 1.25, opacity: 0.4 }} animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 18 }}
+                className="font-serif text-[5.5rem] leading-[.85] font-semibold text-navy tabular-nums origin-left">
+                {count}
+              </motion.span>
+              <span className="text-sm text-ink-soft pb-1">{count === 1 ? 'person' : 'people'} signed in</span>
+            </div>
+          </div>
+          <ol className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <AnimatePresence initial={false}>
+              {[...wall].reverse().map((c, i) => (
+                <motion.li
+                  key={c.id}
+                  layout="position"
+                  initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
+                  className="flex items-center gap-3 px-6 py-3 border-b border-line-soft"
+                >
+                  <span className="w-8 font-mono text-xs text-ink-faint tabular-nums">{String(wall.length - i).padStart(2, '0')}</span>
+                  <span className="flex-1 min-w-0 truncate text-[17px] font-semibold tracking-[-.01em]">
+                    {c.first_name} <span className="text-ink-soft font-medium">{c.last_name}</span>
+                  </span>
+                  <span className="font-mono text-xs text-ink-faint tabular-nums">
+                    {new Date(c.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                </motion.li>
+              ))}
+            </AnimatePresence>
+            {wall.length === 0 && <li className="px-6 py-8 text-sm text-ink-faint">No one yet.</li>}
+          </ol>
         </section>
       </div>
       </LayoutGroup>

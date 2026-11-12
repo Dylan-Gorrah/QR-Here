@@ -69,14 +69,14 @@ export default function CameraCube() {
       {/* Name on a paper label pinned to the top of the screen; torn off and sent to the board on success */}
       <div className="flex-none relative px-4 pt-[calc(env(safe-area-inset-top)+14px)] z-10">
         <motion.div
-          className="relative drop-shadow-[0_6px_14px_rgba(10,35,66,.10)]"
+          className="relative [filter:drop-shadow(0_12px_20px_rgba(10,35,66,.20))_drop-shadow(0_2px_4px_rgba(10,35,66,.12))]"
           initial={{ y: -40, opacity: 0 }}
           animate={torn
             ? { y: [0, 6, -900], x: [0, -2, 30], rotate: [0, -2.5, -14] }
             : { y: 0, opacity: 1, rotate: 0 }}
           transition={torn ? { duration: 0.85, times: [0, 0.22, 1], ease: [0.5, 0, 0.75, 0] } : { duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
         >
-          <div className="paper-label-sm bg-white border border-line border-l-[4px] border-l-gold pl-4 pr-2 pt-3 pb-5 flex items-center gap-2">
+          <div className="paper-label-sm bg-white border border-line pl-4 pr-2 pt-3 pb-5 flex items-center gap-2">
             <div className="flex-1 min-w-0">
               <div className="eyebrow text-[9.5px] mb-1">Hello, my name is</div>
               <div className="font-serif text-[30px] font-semibold leading-[1.05] text-navy truncate">
