@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; }
+body {
+  @apply bg-canvas text-ink font-sans antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+#root { min-height: 100dvh; }
+input, textarea, select { font-family: inherit; }
+button { touch-action: manipulation; }
+:focus-visible { outline: 2px solid #C8A840; outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+@layer components {
+  /* 16px+ text stops iOS zooming on focus */
+  .field {
+    @apply w-full h-[52px] px-[13px] rounded border-[1.5px] border-line bg-white text-base text-ink
+           placeholder:text-ink-faint outline-none appearance-none transition-colors duration-200
+           focus:border-gold;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 min-h-[50px] px-[18px] rounded font-semibold text-sm tracking-[.04em]
+           transition duration-200 ease-spring active:scale-[.975] disabled:opacity-40 disabled:pointer-events-none;
+  }
+  .btn-primary { @apply btn bg-gold text-navy; }
+  .btn-navy { @apply btn bg-navy text-gold; }
+  .btn-ghost { @apply btn bg-transparent text-ink-soft; }
+  .btn-outline { @apply btn border-[1.5px] border-line bg-transparent text-ink; }
+  .label { @apply block mb-1.5 ml-px text-[10px] font-semibold tracking-[.1em] uppercase text-ink-soft; }
+  .eyebrow { @apply font-mono text-[10px] tracking-[.16em] uppercase text-ink-faint; }
+  .display { @apply font-serif font-semibold text-[38px] leading-[1.06] tracking-[-.01em]; }
+  .card { @apply bg-white border border-line rounded; }
+}
