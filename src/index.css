@@ -19,6 +19,16 @@ button { touch-action: manipulation; }
 }
 
 @layer components {
+  /* paper label with a torn (zig-zag) bottom edge */
+  .paper-label {
+    -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%;
+            mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%;
+  }
+  .paper-label-sm {
+    -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 10px 100%;
+            mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 10px 100%;
+  }
+
   /* 16px+ text stops iOS zooming on focus */
   .field {
     @apply w-full h-[52px] px-[13px] rounded border-[1.5px] border-line bg-white text-base text-ink

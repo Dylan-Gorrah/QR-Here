@@ -20,15 +20,19 @@ export default function CameraCube() {
   const [notice, setNotice] = useState(state?.notice ?? '')
   const [code, setCode] = useState('')
   const [success, setSuccess] = useState(false)
+  const [torn, setTorn] = useState(false)
 
   async function submit(c: string) {
     if (!name) return
     setMode('busy')
     const res = await checkIn(c, name.first, name.last, getDeviceId())
     if (res.ok || res.error === 'already_in') {
+      // tear the name label off and send it up to the board
+      setTorn(true)
+      navigator.vibrate?.([30, 40, 30])
+      await new Promise(r => setTimeout(r, 650))
       setSuccess(true)
-      navigator.vibrate?.([40, 60, 40])
-      await new Promise(r => setTimeout(r, 1100))
+      await new Promise(r => setTimeout(r, 1200))
     }
     nav('/done', { replace: true, state: { res, name } })
   }
@@ -67,10 +71,9 @@ export default function CameraCube() {
         <Link to="/" className="min-h-[44px] flex items-center text-xs font-semibold tracking-[.04em] text-gold-dark active:opacity-60">Not you? Change name</Link>
       </header>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4 gap-7">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 gap-5">
         <div className="text-center px-2">
-          <div className="eyebrow mb-2.5">{success ? 'Done' : 'Step 2 of 2'}</div>
-          <h1 className="display text-[32px]">
+          <h1 className="display text-[30px]">
             {success ? "You're signed in!" : showManual ? 'Enter the code' : 'Scan the code'}
           </h1>
           <p className="mt-2 text-sm leading-[1.6] text-ink-soft">
@@ -80,8 +83,35 @@ export default function CameraCube() {
           </p>
         </div>
 
+        {/* Name label: torn off and sent to the board on success */}
+        <div className="relative w-[min(76vw,330px)]">
+          <motion.div
+            className="relative z-10 drop-shadow-[0_6px_14px_rgba(10,35,66,.10)]"
+            initial={{ y: -12, opacity: 0 }}
+            animate={torn
+              ? { y: [0, 5, -1100], x: [0, -2, 30], rotate: [0, -2.5, -14], opacity: [1, 1, 1] }
+              : { y: 0, opacity: 1, rotate: 0 }}
+            transition={torn ? { duration: 0.85, times: [0, 0.22, 1], ease: [0.5, 0, 0.75, 0] } : { duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+          >
+            <div className="paper-label-sm bg-white border border-line border-l-[4px] border-l-gold px-4 pt-3 pb-5">
+              <div className="eyebrow text-[9.5px] mb-1">Hello, my name is</div>
+              <div className="font-serif text-[28px] font-semibold leading-[1.05] text-navy truncate">
+                {name.first} <span className="text-gold-dark">{name.last}</span>
+              </div>
+            </div>
+          </motion.div>
+          {/* perforation stub left behind */}
+          <div className="absolute left-0 right-0 bottom-[2px] border-b-2 border-dashed border-line pointer-events-none" />
+          {torn && (
+            <motion.div className="absolute inset-x-0 -bottom-6 text-center eyebrow text-[9.5px] text-gold-dark"
+              initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+              Sent to the board ↑
+            </motion.div>
+          )}
+        </div>
+
         {/* The cube */}
-        <div className={`relative w-[min(76vw,330px)] aspect-square ${showManual ? 'hidden' : ''}`}>
+        <div className={`relative mt-3 w-[min(76vw,330px,42dvh)] aspect-square ${showManual ? 'hidden' : ''}`}>
           <div className="absolute inset-0 rounded-2xl overflow-hidden bg-navy border border-line">
             <video ref={videoRef} className="w-full h-full object-cover" playsInline muted autoPlay />
             {mode === 'starting' && (

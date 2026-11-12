@@ -9,7 +9,7 @@ export default function NameChip({ c, size, onClick, selected }: {
   selected?: boolean
 }) {
   const s = styleFor(c.first_name, c.last_name, c.device_id)
-  const text = size === 'lg' ? 'text-[1.9rem] px-6 py-3' : size === 'md' ? 'text-2xl px-5 py-2.5' : 'text-lg px-4 py-2'
+  const text = size === 'lg' ? 'text-[1.9rem] px-6 pt-3 pb-[18px]' : size === 'md' ? 'text-2xl px-5 pt-2.5 pb-4' : 'text-lg px-4 pt-2 pb-3.5'
   return (
     <motion.button
       layoutId={c.id}
@@ -18,12 +18,14 @@ export default function NameChip({ c, size, onClick, selected }: {
       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
       className="relative"
     >
+      <span className="block drop-shadow-[0_4px_8px_rgba(10,35,66,.08)]" style={{ transform: `rotate(${s.tilt}deg)` }}>
       <span
-        className={`block rounded bg-white border border-l-[3px] font-semibold tracking-[-.01em] whitespace-nowrap transition-colors
+        className={`paper-label-sm block bg-white border border-l-[4px] font-semibold tracking-[-.01em] whitespace-nowrap transition-colors
           ${selected ? "border-navy" : "border-line"} ${text}`}
-        style={{ transform: `rotate(${s.tilt}deg)`, borderLeftColor: s.color }}
+        style={{ borderLeftColor: s.color }}
       >
         <span>{c.first_name}</span> <span style={{ color: s.color }}>{c.last_name}</span>
+      </span>
       </span>
     </motion.button>
   )

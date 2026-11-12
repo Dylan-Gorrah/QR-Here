@@ -1,5 +1,6 @@
 export const ENTRANCES = [
   'bounce', 'drop', 'slideSpin', 'flip', 'typing', 'wave', 'blurZoom', 'confetti',
+  'flutter', 'stamp', 'swing', 'unfold', 'rise', 'elastic', 'spiral', 'rollRight', 'jelly',
 ] as const
 export type Entrance = (typeof ENTRANCES)[number]
 
