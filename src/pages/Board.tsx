@@ -21,6 +21,15 @@ export default function Board() {
   const [selected, setSelected] = useState<string | null>(null)
   const [barVisible, setBarVisible] = useState(true)
   const [rotate, setRotate] = useState(false)
+  const [sideMode, setSideMode] = useState(() => {
+    try { return localStorage.getItem('att.anim') !== 'centre' } catch { return true }
+  })
+  function toggleAnim() {
+    setSideMode(v => {
+      try { localStorage.setItem('att.anim', v ? 'centre' : 'side') } catch {}
+      return !v
+    })
+  }
   const [live, setLive] = useState(false)
 
   const known = useRef(new Set<string>())
@@ -200,15 +209,19 @@ export default function Board() {
             <input type="checkbox" className="accent-[#C8A840]" checked={rotate} onChange={e => setRotate(e.target.checked)} />
             Rotate code
           </label>
+          <button onClick={toggleAnim} className="px-3 h-9 rounded active:bg-gold-bg font-medium text-ink-soft">
+            Animation: <span className="text-navy">{sideMode ? 'Side' : 'Centre'}</span>
+          </button>
           <button onClick={fullscreen} className="px-3 h-9 rounded-lg active:bg-gold-bg font-medium text-ink-soft">Fullscreen</button>
           <button onClick={endSession} className="px-3 h-9 rounded-lg active:bg-bad-bg font-medium text-bad">End session</button>
           <button onClick={newSession} className="px-3 h-9 rounded active:bg-gold-bg font-medium text-navy">New session</button>
         </div>
       </motion.div>
 
+      <LayoutGroup>
       <div className="h-full grid grid-cols-3 gap-8 p-10">
         {/* left: QR */}
-        <section className="col-span-1 flex flex-col justify-center">
+        <section className="col-span-1 relative flex flex-col justify-center">
           <div className="card p-8 flex flex-col items-center">
             <div className="eyebrow text-center text-[12px]">{session.title}</div>
             <div className="w-full aspect-square mt-5">
@@ -227,12 +240,12 @@ export default function Board() {
               {count}
             </motion.span>
           </div>
+          <AnimatePresence>{spot && sideMode && <Spotlight key={spot.id} c={spot} side />}</AnimatePresence>
         </section>
 
         {/* right: wall */}
-        <section className="col-span-2 relative card overflow-hidden">
-          <LayoutGroup>
-            <div className="h-full overflow-hidden p-10">
+        <section className="col-span-2 relative card">
+            <div className="h-full p-10">
               {wall.length === 0 && !spot ? (
                 <div className="h-full grid place-items-center text-center">
                   <div>
@@ -262,10 +275,10 @@ export default function Board() {
                 </div>
               )}
             </div>
-            <AnimatePresence>{spot && <Spotlight key={spot.id} c={spot} />}</AnimatePresence>
-          </LayoutGroup>
+            <AnimatePresence>{spot && !sideMode && <Spotlight key={spot.id} c={spot} />}</AnimatePresence>
         </section>
       </div>
+      </LayoutGroup>
     </div>
   )
 }

@@ -15,8 +15,14 @@ export function getName(): Identity | null {
   return null
 }
 
+/** Saving a different name gives this phone a fresh device id, so it counts as a new person. */
 export function saveName(id: Identity) {
-  try { localStorage.setItem(NAME_KEY, JSON.stringify(id)) } catch {}
+  const prev = getName()
+  const changed = prev && (prev.first.toLowerCase() !== id.first.toLowerCase() || prev.last.toLowerCase() !== id.last.toLowerCase())
+  try {
+    if (changed) localStorage.removeItem(DEVICE_KEY)
+    localStorage.setItem(NAME_KEY, JSON.stringify(id))
+  } catch {}
 }
 
 export function getDeviceId(): string {

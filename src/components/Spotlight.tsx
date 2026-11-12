@@ -70,8 +70,40 @@ function Confetti({ color }: { color: string }) {
   )
 }
 
-export default function Spotlight({ c }: { c: Checkin }) {
+/** Side mode: the name slides in from the screen edge over the QR panel, as if it came from the phone. */
+function SideCard({ c, color }: { c: Checkin; color: string }) {
+  return (
+    <motion.div
+      className="absolute inset-0 z-20 grid place-items-center"
+      initial={{ opacity: 1 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.2 } }}
+    >
+      <motion.div className="absolute inset-0 bg-canvas/80 backdrop-blur-[2px]"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }} />
+      <motion.div layoutId={c.id} transition={{ type: 'spring', stiffness: 200, damping: 26 }} className="relative w-[88%]">
+        <motion.div
+          initial={{ x: '-120vw', rotate: -4 }}
+          animate={{ x: 0, rotate: 0 }}
+          transition={{ type: 'spring', stiffness: 170, damping: 19, mass: 0.9 }}
+          className="rounded bg-white border border-line border-l-[5px] shadow-lift px-9 py-8"
+          style={{ borderLeftColor: color }}
+        >
+          <div className="flex items-center gap-2 eyebrow text-[12px] mb-3">
+            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2}><rect x="7" y="2.5" width="10" height="19" rx="2" /><path d="M11 18.5h2" /></svg>
+            Just signed in
+          </div>
+          <div className="font-serif font-semibold leading-[.95] tracking-[-.01em] text-navy break-words">
+            <div className="text-[4.2rem]">{c.first_name}</div>
+            <div className="text-[4.2rem]" style={{ color }}>{c.last_name}</div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+export default function Spotlight({ c, side = false }: { c: Checkin; side?: boolean }) {
   const s = styleFor(c.first_name, c.last_name, c.device_id)
+  if (side) return <SideCard c={c} color={s.color} />
   const isLetters = s.entrance === 'typing' || s.entrance === 'wave'
   const stagger = s.entrance === 'typing' ? 0.06 : 0.035
 
