@@ -66,52 +66,40 @@ export default function CameraCube() {
 
   return (
     <div className="fixed inset-0 bg-canvas flex flex-col">
-      <header className="flex-none flex items-center gap-2 px-4 pt-[calc(env(safe-area-inset-top)+10px)] pb-[11px] border-b border-line bg-canvas/85 backdrop-blur-xl backdrop-saturate-150 z-10">
-        <span className="flex-1 text-[15px] font-semibold tracking-[.01em]">Hi, {name.first}</span>
-        <Link to="/" className="min-h-[44px] flex items-center text-xs font-semibold tracking-[.04em] text-gold-dark active:opacity-60">Not you? Change name</Link>
-      </header>
-
-      <div className="flex-1 flex flex-col items-center justify-center px-4 gap-5">
-        <div className="text-center px-2">
-          <h1 className="display text-[30px]">
-            {success ? "You're signed in!" : showManual ? 'Enter the code' : 'Scan the code'}
-          </h1>
-          <p className="mt-2 text-sm leading-[1.6] text-ink-soft">
-            {success ? 'Look up, your name is on the board.' : showManual
-              ? camFailed ? 'Camera unavailable. Enter the 4 digits under the QR.' : 'Enter the 4 digits under the QR on the board.'
-              : 'Point your camera at the QR on the board.'}
-          </p>
-        </div>
-
-        {/* Name label: torn off and sent to the board on success */}
-        <div className="relative w-[min(76vw,330px)]">
-          <motion.div
-            className="relative z-10 drop-shadow-[0_6px_14px_rgba(10,35,66,.10)]"
-            initial={{ y: -12, opacity: 0 }}
-            animate={torn
-              ? { y: [0, 5, -1100], x: [0, -2, 30], rotate: [0, -2.5, -14], opacity: [1, 1, 1] }
-              : { y: 0, opacity: 1, rotate: 0 }}
-            transition={torn ? { duration: 0.85, times: [0, 0.22, 1], ease: [0.5, 0, 0.75, 0] } : { duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
-          >
-            <div className="paper-label-sm bg-white border border-line border-l-[4px] border-l-gold px-4 pt-3 pb-5">
+      {/* Name on a paper label pinned to the top of the screen; torn off and sent to the board on success */}
+      <div className="flex-none relative px-4 pt-[calc(env(safe-area-inset-top)+14px)] z-10">
+        <motion.div
+          className="relative drop-shadow-[0_6px_14px_rgba(10,35,66,.10)]"
+          initial={{ y: -40, opacity: 0 }}
+          animate={torn
+            ? { y: [0, 6, -900], x: [0, -2, 30], rotate: [0, -2.5, -14] }
+            : { y: 0, opacity: 1, rotate: 0 }}
+          transition={torn ? { duration: 0.85, times: [0, 0.22, 1], ease: [0.5, 0, 0.75, 0] } : { duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+        >
+          <div className="paper-label-sm bg-white border border-line border-l-[4px] border-l-gold pl-4 pr-2 pt-3 pb-5 flex items-center gap-2">
+            <div className="flex-1 min-w-0">
               <div className="eyebrow text-[9.5px] mb-1">Hello, my name is</div>
-              <div className="font-serif text-[28px] font-semibold leading-[1.05] text-navy truncate">
+              <div className="font-serif text-[30px] font-semibold leading-[1.05] text-navy truncate">
                 {name.first} <span className="text-gold-dark">{name.last}</span>
               </div>
             </div>
-          </motion.div>
-          {/* perforation stub left behind */}
-          <div className="absolute left-0 right-0 bottom-[2px] border-b-2 border-dashed border-line pointer-events-none" />
-          {torn && (
-            <motion.div className="absolute inset-x-0 -bottom-6 text-center eyebrow text-[9.5px] text-gold-dark"
-              initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-              Sent to the board ↑
-            </motion.div>
-          )}
-        </div>
+            <Link to="/" aria-label="Change name"
+              className="grid place-items-center w-11 h-11 rounded text-ink-faint transition duration-200 ease-spring active:scale-90 active:bg-gold-bg">
+              <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z" /><path d="M13.5 6.5l4 4" /></svg>
+            </Link>
+          </div>
+        </motion.div>
+        {/* perforation stub left behind */}
+        <div className="absolute left-4 right-4 bottom-[2px] border-b-2 border-dashed border-line pointer-events-none" />
+      </div>
+
+      <div className="flex-1 flex flex-col items-center justify-center px-4 gap-6">
+        <h1 className="display text-[30px] text-center">
+          {success ? "You're signed in!" : showManual ? 'Enter the code' : 'Scan the QR code'}
+        </h1>
 
         {/* The cube */}
-        <div className={`relative mt-3 w-[min(76vw,330px,42dvh)] aspect-square ${showManual ? 'hidden' : ''}`}>
+        <div className={`relative w-[min(80vw,340px,48dvh)] aspect-square ${showManual ? 'hidden' : ''}`}>
           <div className="absolute inset-0 rounded-2xl overflow-hidden bg-navy border border-line">
             <video ref={videoRef} className="w-full h-full object-cover" playsInline muted autoPlay />
             {mode === 'starting' && (
